@@ -184,7 +184,7 @@ def get_avg_phreds(fastq, start_byte, end_byte):
     Opens the file, and gets the average phred score
     """
     # Finding the first complete header and setting that as new start
-    with open(fastq, "rb") as fastq_file:
+    with open(fastq[0], "r") as fastq_file:
         # If the start byte is not 0, find the nearest upcoming header
         fastq_file.seek(start_byte)
         if not start_byte == 0:
