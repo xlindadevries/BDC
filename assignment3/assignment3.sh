@@ -2,7 +2,7 @@
 
 # Linda de Vries
 # assignment 3
-# shell: sbatch assignment3.shs
+# shell: sbatch assignment3.sh
 
 #BATCH --mail-user=ldevries@bioinf.nl
 #BATCH --mail-type=END
@@ -14,15 +14,13 @@
 
 source /commons/conda/conda_load.sh
 
+cores=16
+
 ### NOTE: het ging crashem na een paar uur. dus vandaar met data wat wel lukte.
-export index=/students/2021-2022/Thema11/ldevries/data/homo_sapiens.fa
-export data=/students/2021-2022/Thema11/ldevries/data/lupus.fa
+#export index=/students/2021-2022/Thema11/ldevries/data/homo_sapiens.fa
+#export data=/students/2021-2022/Thema11/ldevries/data/lupus.fa
 
-# Linear
-for ((n = 1; n <= 16; n++)); do
-    srun /usr/bin/time -o timings.txt --append -f "${n}\t%e" minimap2 -t $n+1 -a $index $data > "/dev/null" 2> log.txt
+for n in $(seq 1 $cores);
+do
+/usr/bin/time -o timings.txt --append -f "${n}\t%e" minimap2 /data/dataprocessing/MinIONData/all_bacteria.fna /data/dataprocessing/MinIONData/all.fq -t "${n}" -a > /dev/null
 done
-
-# Parrallel
-#SBATCH --array=1-16
-# srun /usr/bin/time -o timings_parrallel.txt --append -f "${SLURM_ARRAY_TASK_ID}\t%e" minimap2 -N "$SLURM_ARRAY_TASK_ID" + 1 -a $index $data  > "/dev/null" 2> log.txt
