@@ -2,7 +2,7 @@
 
 # Linda de Vries
 # assignment 3
-# shell: slurm
+# shell: sbatch assignment3.sh
 
 #BATCH --mail-user=ldevries@bioinf.nl
 #BATCH --mail-type=END
@@ -14,12 +14,13 @@
 
 source /commons/conda/conda_load.sh
 
-### NOTE: het ging crashem na een paar uur. dus vandaar met data wat wel lukte.
-export index=/students/2021-2022/Thema11/ldevries/data/homo_sapiens.fa
-export data=/students/2021-2022/Thema11/ldevries/data/lupus.fa
+### Test data
+#index=/students/2021-2022/Thema11/ldevries/data/homo_sapiens.fa
+#data=/students/2021-2022/Thema11/ldevries/data/lupus.fa
 
-# Linear
+index=/data/dataprocessing/MinIONData/all_bacteria.fna
+data=/data/dataprocessing/MinIONData/all.fq
+
 for ((n = 1; n <= 16; n++)); do
-    srun /usr/bin/time -o timings.txt --append -f "${n}\t%e" minimap2 -t $n+1 -a $index $data > "/dev/null" 2> log.txt
+    /usr/bin/time -o timings.txt --append -f "${n}\t%e" minimap2 -t $n+1 -a $index $data > "/dev/null" 2> log.txt
 done
-
