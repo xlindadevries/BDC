@@ -1,0 +1,239 @@
+1,9704,"== Parsed Logical Plan ==
+Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Analyzed Logical Plan ==
+_c0: string, _c1: string, _c2: string, _c3: string, _c4: string, _c5: string, _c6: string, _c7: string, _c8: string, _c9: string, _c10: string, _c11: string, _c12: string, _c13: string, _c14: string
+Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Optimized Logical Plan ==
+Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Physical Plan ==
+FileScan csv [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/data/dataprocessing/interproscan/all_bacilli.tsv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<_c0:string,_c1:string,_c2:string,_c3:string,_c4:string,_c5:string,_c6:string,_c7:string,_c...
+"
+2,11.490524386574391,"== Parsed Logical Plan ==
+Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Analyzed Logical Plan ==
+_c0: string, _c1: string, _c2: string, _c3: string, _c4: string, _c5: string, _c6: string, _c7: string, _c8: string, _c9: string, _c10: string, _c11: string, _c12: string, _c13: string, _c14: string
+Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Optimized Logical Plan ==
+Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Physical Plan ==
+FileScan csv [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/data/dataprocessing/interproscan/all_bacilli.tsv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<_c0:string,_c1:string,_c2:string,_c3:string,_c4:string,_c5:string,_c6:string,_c7:string,_c...
+"
+3,GO:0005524,"== Parsed Logical Plan ==
+'Aggregate ['_c13], ['_c13, count(1) AS count#200L]
++- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#29, _c13#168, _c14#31]
+   +- Generate explode(split(_c13#30, [|], -1)), false, [_c13#168]
+      +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Analyzed Logical Plan ==
+_c13: string, count: bigint
+Aggregate [_c13#168], [_c13#168, count(1) AS count#200L]
++- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#29, _c13#168, _c14#31]
+   +- Generate explode(split(_c13#30, [|], -1)), false, [_c13#168]
+      +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Optimized Logical Plan ==
+Aggregate [_c13#168], [_c13#168, count(1) AS count#200L]
++- Generate explode(split(_c13#30, [|], -1)), [0], false, [_c13#168]
+   +- Project [_c13#30]
+      +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- HashAggregate(keys=[_c13#168], functions=[count(1)], output=[_c13#168, count#200L])
+   +- Exchange hashpartitioning(_c13#168, 200), ENSURE_REQUIREMENTS, [id=#267]
+      +- HashAggregate(keys=[_c13#168], functions=[partial_count(1)], output=[_c13#168, count#204L])
+         +- Generate explode(split(_c13#30, [|], -1)), false, [_c13#168]
+            +- FileScan csv [_c13#30] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/data/dataprocessing/interproscan/all_bacilli.tsv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<_c13:string>
+"
+4,408.1892178981481,"== Parsed Logical Plan ==
+Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Analyzed Logical Plan ==
+_c0: string, _c1: string, _c2: string, _c3: string, _c4: string, _c5: string, _c6: string, _c7: string, _c8: string, _c9: string, _c10: string, _c11: string, _c12: string, _c13: string, _c14: string
+Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Optimized Logical Plan ==
+Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Physical Plan ==
+FileScan csv [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/data/dataprocessing/interproscan/all_bacilli.tsv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<_c0:string,_c1:string,_c2:string,_c3:string,_c4:string,_c5:string,_c6:string,_c7:string,_c...
+"
+5,"['IPR027417', 'IPR002347', 'IPR003439', 'IPR036388', 'IPR036259', 'IPR003593', 'IPR036390', 'IPR036291', 'IPR000515', 'IPR001789']","== Parsed Logical Plan ==
+'Aggregate ['_c11], ['_c11, count(1) AS count#234L]
++- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Analyzed Logical Plan ==
+_c11: string, count: bigint
+Aggregate [_c11#28], [_c11#28, count(1) AS count#234L]
++- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Optimized Logical Plan ==
+Aggregate [_c11#28], [_c11#28, count(1) AS count#234L]
++- Project [_c11#28]
+   +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- HashAggregate(keys=[_c11#28], functions=[count(1)], output=[_c11#28, count#234L])
+   +- Exchange hashpartitioning(_c11#28, 200), ENSURE_REQUIREMENTS, [id=#357]
+      +- HashAggregate(keys=[_c11#28], functions=[partial_count(1)], output=[_c11#28, count#238L])
+         +- FileScan csv [_c11#28] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/data/dataprocessing/interproscan/all_bacilli.tsv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<_c11:string>
+"
+6,"['IPR027417', 'IPR036259', 'IPR020846', 'IPR029058', 'IPR036291', 'IPR015424', 'IPR036388', 'IPR029063', 'IPR000182', 'IPR016181']","== Parsed Logical Plan ==
+'Aggregate ['_c11], ['_c11, count(1) AS count#293L]
++- Filter ((Lenght#240 >= bottom_range#257) AND (Lenght#240 < cast(_c2#19 as double)))
+   +- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#29, _c13#30, _c14#31, Lenght#240, (cast(_c2#19 as double) * 0.9) AS bottom_range#257]
+      +- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#29, _c13#30, _c14#31, ((cast(_c7#24 as double) - cast(_c6#23 as double)) + cast(1 as double)) AS Lenght#240]
+         +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Analyzed Logical Plan ==
+_c11: string, count: bigint
+Aggregate [_c11#28], [_c11#28, count(1) AS count#293L]
++- Filter ((Lenght#240 >= bottom_range#257) AND (Lenght#240 < cast(_c2#19 as double)))
+   +- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#29, _c13#30, _c14#31, Lenght#240, (cast(_c2#19 as double) * 0.9) AS bottom_range#257]
+      +- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#29, _c13#30, _c14#31, ((cast(_c7#24 as double) - cast(_c6#23 as double)) + cast(1 as double)) AS Lenght#240]
+         +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Optimized Logical Plan ==
+Aggregate [_c11#28], [_c11#28, count(1) AS count#293L]
++- Project [_c11#28]
+   +- Filter (((isnotnull(_c7#24) AND isnotnull(_c6#23)) AND isnotnull(_c2#19)) AND ((((cast(_c7#24 as double) - cast(_c6#23 as double)) + 1.0) >= (cast(_c2#19 as double) * 0.9)) AND (((cast(_c7#24 as double) - cast(_c6#23 as double)) + 1.0) < cast(_c2#19 as double))))
+      +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- HashAggregate(keys=[_c11#28], functions=[count(1)], output=[_c11#28, count#293L])
+   +- Exchange hashpartitioning(_c11#28, 200), ENSURE_REQUIREMENTS, [id=#433]
+      +- HashAggregate(keys=[_c11#28], functions=[partial_count(1)], output=[_c11#28, count#297L])
+         +- Project [_c11#28]
+            +- Filter ((((isnotnull(_c7#24) AND isnotnull(_c6#23)) AND isnotnull(_c2#19)) AND (((cast(_c7#24 as double) - cast(_c6#23 as double)) + 1.0) >= (cast(_c2#19 as double) * 0.9))) AND (((cast(_c7#24 as double) - cast(_c6#23 as double)) + 1.0) < cast(_c2#19 as double)))
+               +- FileScan csv [_c2#19,_c6#23,_c7#24,_c11#28] Batched: false, DataFilters: [isnotnull(_c7#24), isnotnull(_c6#23), isnotnull(_c2#19), (((cast(_c7#24 as double) - cast(_c6#23..., Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/data/dataprocessing/interproscan/all_bacilli.tsv], PartitionFilters: [], PushedFilters: [IsNotNull(_c7), IsNotNull(_c6), IsNotNull(_c2)], ReadSchema: struct<_c2:string,_c6:string,_c7:string,_c11:string>
+"
+7,"[' C-terminal', ' conserved site', 'P-loop containing nucleoside triphosphate hydrolase', ' N-terminal', 'ABC transporter-like', ' ATP-binding domain', 'Short-chain dehydrogenase/reductase SDR', ' C-terminal domain superfamily', 'Winged helix-like DNA-binding domain superfamily', 'Transcription regulator HTH']","== Parsed Logical Plan ==
+'Aggregate ['_c12], ['_c12, count(1) AS count#335L]
++- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#303, _c13#30, _c14#31]
+   +- Generate explode(split(_c12#29, ,, -1)), false, [_c12#303]
+      +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Analyzed Logical Plan ==
+_c12: string, count: bigint
+Aggregate [_c12#303], [_c12#303, count(1) AS count#335L]
++- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#303, _c13#30, _c14#31]
+   +- Generate explode(split(_c12#29, ,, -1)), false, [_c12#303]
+      +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Optimized Logical Plan ==
+Aggregate [_c12#303], [_c12#303, count(1) AS count#335L]
++- Generate explode(split(_c12#29, ,, -1)), [0], false, [_c12#303]
+   +- Project [_c12#29]
+      +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- HashAggregate(keys=[_c12#303], functions=[count(1)], output=[_c12#303, count#335L])
+   +- Exchange hashpartitioning(_c12#303, 200), ENSURE_REQUIREMENTS, [id=#504]
+      +- HashAggregate(keys=[_c12#303], functions=[partial_count(1)], output=[_c12#303, count#339L])
+         +- Generate explode(split(_c12#29, ,, -1)), false, [_c12#303]
+            +- FileScan csv [_c12#29] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/data/dataprocessing/interproscan/all_bacilli.tsv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<_c12:string>
+"
+8,"['Haemolysin activator HlyB', 'PSRP-3/Ycf65 superfamily', 'Neurolysin/Thimet oligopeptidase', 'Abortive phage resistance protein AbiGi', 'CopG antitoxin', 'UDP-N-acetylglucosamine O-acyltransferase', ' ligand binding region', 'Fructose-1-6-bisphosphatase class 1', ' PmgA', ' DevB type']","== Parsed Logical Plan ==
+'Aggregate ['_c12], ['_c12, count(1) AS count#374L]
++- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#342, _c13#30, _c14#31]
+   +- Generate explode(split(_c12#29, ,, -1)), false, [_c12#342]
+      +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Analyzed Logical Plan ==
+_c12: string, count: bigint
+Aggregate [_c12#342], [_c12#342, count(1) AS count#374L]
++- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#342, _c13#30, _c14#31]
+   +- Generate explode(split(_c12#29, ,, -1)), false, [_c12#342]
+      +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Optimized Logical Plan ==
+Aggregate [_c12#342], [_c12#342, count(1) AS count#374L]
++- Generate explode(split(_c12#29, ,, -1)), [0], false, [_c12#342]
+   +- Project [_c12#29]
+      +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- HashAggregate(keys=[_c12#342], functions=[count(1)], output=[_c12#342, count#374L])
+   +- Exchange hashpartitioning(_c12#342, 200), ENSURE_REQUIREMENTS, [id=#575]
+      +- HashAggregate(keys=[_c12#342], functions=[partial_count(1)], output=[_c12#342, count#378L])
+         +- Generate explode(split(_c12#29, ,, -1)), false, [_c12#342]
+            +- FileScan csv [_c12#29] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/data/dataprocessing/interproscan/all_bacilli.tsv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<_c12:string>
+"
+9,"['P-loop containing nucleoside triphosphate hydrolase', 'MFS transporter superfamily', 'Pyridoxal phosphate-dependent transferase', 'Major facilitator superfamily domain', 'ABC transporter', ' bacterial-type', 'Alpha/Beta hydrolase fold', ' BtuC-like', 'NAD(P)-binding domain superfamily', 'Winged helix-like DNA-binding domain superfamily']","== Parsed Logical Plan ==
+'Aggregate ['_c12], ['_c12, count(1) AS count#452L]
++- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#416, _c13#30, _c14#31, Lenght#380, bottom_range#397]
+   +- Generate explode(split(_c12#29, ,, -1)), false, [_c12#416]
+      +- Filter ((Lenght#380 >= bottom_range#397) AND (Lenght#380 < cast(_c2#19 as double)))
+         +- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#29, _c13#30, _c14#31, Lenght#380, (cast(_c2#19 as double) * 0.9) AS bottom_range#397]
+            +- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#29, _c13#30, _c14#31, ((cast(_c7#24 as double) - cast(_c6#23 as double)) + cast(1 as double)) AS Lenght#380]
+               +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Analyzed Logical Plan ==
+_c12: string, count: bigint
+Aggregate [_c12#416], [_c12#416, count(1) AS count#452L]
++- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#416, _c13#30, _c14#31, Lenght#380, bottom_range#397]
+   +- Generate explode(split(_c12#29, ,, -1)), false, [_c12#416]
+      +- Filter ((Lenght#380 >= bottom_range#397) AND (Lenght#380 < cast(_c2#19 as double)))
+         +- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#29, _c13#30, _c14#31, Lenght#380, (cast(_c2#19 as double) * 0.9) AS bottom_range#397]
+            +- Project [_c0#17, _c1#18, _c2#19, _c3#20, _c4#21, _c5#22, _c6#23, _c7#24, _c8#25, _c9#26, _c10#27, _c11#28, _c12#29, _c13#30, _c14#31, ((cast(_c7#24 as double) - cast(_c6#23 as double)) + cast(1 as double)) AS Lenght#380]
+               +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Optimized Logical Plan ==
+Aggregate [_c12#416], [_c12#416, count(1) AS count#452L]
++- Generate explode(split(_c12#29, ,, -1)), [0], false, [_c12#416]
+   +- Project [_c12#29]
+      +- Filter (((isnotnull(_c7#24) AND isnotnull(_c6#23)) AND isnotnull(_c2#19)) AND ((((cast(_c7#24 as double) - cast(_c6#23 as double)) + 1.0) >= (cast(_c2#19 as double) * 0.9)) AND (((cast(_c7#24 as double) - cast(_c6#23 as double)) + 1.0) < cast(_c2#19 as double))))
+         +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- HashAggregate(keys=[_c12#416], functions=[count(1)], output=[_c12#416, count#452L])
+   +- Exchange hashpartitioning(_c12#416, 200), ENSURE_REQUIREMENTS, [id=#664]
+      +- HashAggregate(keys=[_c12#416], functions=[partial_count(1)], output=[_c12#416, count#456L])
+         +- Generate explode(split(_c12#29, ,, -1)), false, [_c12#416]
+            +- Project [_c12#29]
+               +- Filter ((((isnotnull(_c7#24) AND isnotnull(_c6#23)) AND isnotnull(_c2#19)) AND (((cast(_c7#24 as double) - cast(_c6#23 as double)) + 1.0) >= (cast(_c2#19 as double) * 0.9))) AND (((cast(_c7#24 as double) - cast(_c6#23 as double)) + 1.0) < cast(_c2#19 as double)))
+                  +- FileScan csv [_c2#19,_c6#23,_c7#24,_c12#29] Batched: false, DataFilters: [isnotnull(_c7#24), isnotnull(_c6#23), isnotnull(_c2#19), (((cast(_c7#24 as double) - cast(_c6#23..., Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/data/dataprocessing/interproscan/all_bacilli.tsv], PartitionFilters: [], PushedFilters: [IsNotNull(_c7), IsNotNull(_c6), IsNotNull(_c2)], ReadSchema: struct<_c2:string,_c6:string,_c7:string,_c12:string>
+"
+10,0.5653432058112808,"== Parsed Logical Plan ==
+Project [_c0#17, _c2#472, cast(count#468L as int) AS count#476]
++- Project [_c0#17, cast(_c2#19 as int) AS _c2#472, count#468L]
+   +- Aggregate [_c0#17, _c2#19], [_c0#17, _c2#19, count(1) AS count#468L]
+      +- Filter (NOT (_c11#28 = null) OR NOT (_c11#28 = -))
+         +- Project [_c0#17, _c2#19, _c11#28]
+            +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Analyzed Logical Plan ==
+_c0: string, _c2: int, count: int
+Project [_c0#17, _c2#472, cast(count#468L as int) AS count#476]
++- Project [_c0#17, cast(_c2#19 as int) AS _c2#472, count#468L]
+   +- Aggregate [_c0#17, _c2#19], [_c0#17, _c2#19, count(1) AS count#468L]
+      +- Filter (NOT (_c11#28 = null) OR NOT (_c11#28 = -))
+         +- Project [_c0#17, _c2#19, _c11#28]
+            +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Optimized Logical Plan ==
+Aggregate [_c0#17, _c2#19], [_c0#17, cast(_c2#19 as int) AS _c2#472, cast(count(1) as int) AS count#476]
++- Project [_c0#17, _c2#19]
+   +- Filter (isnotnull(_c11#28) AND NOT (_c11#28 = -))
+      +- Relation [_c0#17,_c1#18,_c2#19,_c3#20,_c4#21,_c5#22,_c6#23,_c7#24,_c8#25,_c9#26,_c10#27,_c11#28,_c12#29,_c13#30,_c14#31] csv
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- HashAggregate(keys=[_c0#17, _c2#19], functions=[count(1)], output=[_c0#17, _c2#472, count#476])
+   +- Exchange hashpartitioning(_c0#17, _c2#19, 200), ENSURE_REQUIREMENTS, [id=#681]
+      +- HashAggregate(keys=[_c0#17, _c2#19], functions=[partial_count(1)], output=[_c0#17, _c2#19, count#481L])
+         +- Project [_c0#17, _c2#19]
+            +- Filter (isnotnull(_c11#28) AND NOT (_c11#28 = -))
+               +- FileScan csv [_c0#17,_c2#19,_c11#28] Batched: false, DataFilters: [isnotnull(_c11#28), NOT (_c11#28 = -)], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/data/dataprocessing/interproscan/all_bacilli.tsv], PartitionFilters: [], PushedFilters: [IsNotNull(_c11), Not(EqualTo(_c11,-))], ReadSchema: struct<_c0:string,_c2:string,_c11:string>
+"

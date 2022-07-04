@@ -14,13 +14,13 @@
 
 source /commons/conda/conda_load.sh
 
-cores=16
+### Test data
+#index=/students/2021-2022/Thema11/ldevries/data/homo_sapiens.fa
+#data=/students/2021-2022/Thema11/ldevries/data/lupus.fa
 
-### NOTE: het ging crashem na een paar uur. dus vandaar met data wat wel lukte.
-#export index=/students/2021-2022/Thema11/ldevries/data/homo_sapiens.fa
-#export data=/students/2021-2022/Thema11/ldevries/data/lupus.fa
+index=/data/dataprocessing/MinIONData/all_bacteria.fna
+data=/data/dataprocessing/MinIONData/all.fq
 
-for n in $(seq 1 $cores);
-do
-/usr/bin/time -o timings.txt --append -f "${n}\t%e" minimap2 /data/dataprocessing/MinIONData/all_bacteria.fna /data/dataprocessing/MinIONData/all.fq -t "${n}" -a > /dev/null
+for ((n = 1; n <= 16; n++)); do
+    /usr/bin/time -o timings.txt --append -f "${n}\t%e" minimap2 -t $n+1 -a $index $data > "/dev/null" 2> log.txt
 done
