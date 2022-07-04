@@ -1,22 +1,16 @@
-Command terminated by signal 2
-1	5.78
-Command terminated by signal 2
-2	3.30
-Command terminated by signal 2
-3	0.42
-Command terminated by signal 2
-4	0.27
-Command terminated by signal 2
-5	0.25
-Command terminated by signal 2
-6	166.02
-7	498.49
-8	465.63
-9	436.15
-10	417.99
-11	408.46
-12	401.32
-13	398.16
-14	385.00
-15	381.95
-16	379.29
+1	2048.93
+2	1077.16
+3	797.04
+4	659.10
+5	568.22
+6	505.09
+7	466.19
+8	434.27
+9	404.77
+10	385.40
+11	378.78
+12	359.32
+13	343.26
+14	373.22
+15	373.56
+16	378.78
