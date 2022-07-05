@@ -1,0 +1,3 @@
+Report for Assignment 5 start evaluation at di 5 jul 2022 11:22:17 CEST with options /data/dataprocessing/interproscan/all_bacilli.tsv
+
+***ASSIGNMENT {assignment} STATUS: PASSED at  di 5 jul 2022 11:24:38 CEST
