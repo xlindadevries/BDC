@@ -1,8 +1,8 @@
-Report for Assignment 2 start evaluation at ma 27 jun 2022 10:47:35 CEST with options -s --chunks 100 --host localhost --port 25717 /homes/martijntest/courses/BDC/2022/grading.fastq
+Report for Assignment 2 start evaluation at di 5 jul 2022 11:16:40 CEST with options -s --chunks 100 --host localhost --port 25717 /homes/martijntest/courses/BDC/2022/grading.fastq
 server errors: 
 usage: assignment2.py [-h] (-s | -c) [-o CSVFILE] -chunks NUM_OF_CHUNKS
                       [-n NUM_OF_CORES] [--host HOST] [--port PORT]
                       [fastq_files [fastq_files ...]]
 assignment2.py: error: argument fastq_files: can't open '100': [Errno 2] No such file or directory: '100'
 client errors: 
-***ASSIGNMENT assignment2.py STATUS: FAILED at  ma 27 jun 2022 10:47:38 CEST
+***ASSIGNMENT assignment2.py STATUS: FAILED at  di 5 jul 2022 11:16:43 CEST
