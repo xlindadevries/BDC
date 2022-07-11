@@ -1,0 +1,11 @@
+************* Module assignment4
+assignment4.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+assignment4.py:16:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+assignment4.py:38:12: W0631: Using possibly undefined loop variable 'i' (undefined-loop-variable)
+assignment4.py:50:37: C0207: Use str(fastq_file[0]).rsplit('/', maxsplit=1)[-1] instead (use-maxsplit-arg)
+assignment4.py:54:37: C0207: Use str(fastq_file[0]).rsplit('/', maxsplit=1)[-1] instead (use-maxsplit-arg)
+assignment4.py:58:0: C0116: Missing function or method docstring (missing-function-docstring)
+
+------------------------------------------------------------------
+Your code has been rated at 8.67/10 (previous run: 9.32/10, -0.65)
+

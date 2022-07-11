@@ -1,0 +1,2 @@
+Report for Assignment 4 start evaluation at di 5 jul 2022 11:17:54 CEST with options: None
+***ASSIGNMENT {assignment} STATUS: PASSED at  di 5 jul 2022 11:19:21 CEST
