@@ -1,10 +1,38 @@
-Report for Assignment 2 start evaluation at do 14 jul 2022 13:43:16 CEST with options -s --chunks 100 --host localhost --port 25717 /homes/martijntest/courses/BDC/2022/grading.fastq
+Report for Assignment 2 start evaluation at do 14 jul 2022 13:47:40 CEST with options -s --chunks 100 --host localhost --port 25717 /homes/martijntest/courses/BDC/2022/grading.fastq
 server errors: 
+Process QueueManager-1:1:
 Traceback (most recent call last):
-  File "assignment2.py", line 349, in <module>
-    sys.exit(main())
-  File "assignment2.py", line 328, in main
-    bytes_per_chunk = math.ceil(total_bytes / args.num_of_chunks)
-AttributeError: 'Namespace' object has no attribute 'num_of_chunks'
+  File "/commons/conda/lib/python3.8/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/commons/conda/lib/python3.8/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/commons/conda/lib/python3.8/multiprocessing/managers.py", line 608, in _run_server
+    server = cls._Server(registry, address, authkey, serializer)
+  File "/commons/conda/lib/python3.8/multiprocessing/managers.py", line 154, in __init__
+    self.listener = Listener(address=address, backlog=16)
+  File "/commons/conda/lib/python3.8/multiprocessing/connection.py", line 448, in __init__
+    self._listener = SocketListener(address, family, backlog)
+  File "/commons/conda/lib/python3.8/multiprocessing/connection.py", line 591, in __init__
+    self._socket.bind(address)
+OSError: [Errno 98] Address already in use
+Process Process-1:
+Traceback (most recent call last):
+  File "/commons/conda/lib/python3.8/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/commons/conda/lib/python3.8/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "assignment2.py", line 46, in runserver
+    manager = make_server_manager(ip, port)
+  File "assignment2.py", line 39, in make_server_manager
+    manager.start()
+  File "/commons/conda/lib/python3.8/multiprocessing/managers.py", line 583, in start
+    self._address = reader.recv()
+  File "/commons/conda/lib/python3.8/multiprocessing/connection.py", line 250, in recv
+    buf = self._recv_bytes()
+  File "/commons/conda/lib/python3.8/multiprocessing/connection.py", line 414, in _recv_bytes
+    buf = self._recv(4)
+  File "/commons/conda/lib/python3.8/multiprocessing/connection.py", line 383, in _recv
+    raise EOFError
+EOFError
 client errors: 
-***ASSIGNMENT assignment2.py STATUS: FAILED at  do 14 jul 2022 13:43:19 CEST
+***ASSIGNMENT assignment2.py STATUS: FAILED at  do 14 jul 2022 13:47:43 CEST
