@@ -1,8 +1,10 @@
-Report for Assignment 2 start evaluation at do 14 jul 2022 11:49:56 CEST with options -s --chunks 100 --host localhost --port 25717 /homes/martijntest/courses/BDC/2022/grading.fastq
+Report for Assignment 2 start evaluation at do 14 jul 2022 11:51:14 CEST with options -s --chunks 100 --host localhost --port 25717 /homes/martijntest/courses/BDC/2022/grading.fastq
 server errors: 
-usage: assignment2.py [-h] (-s | -c) [-o CSVFILE] -chunks NUM_OF_CHUNKS
-                      [-n NUM_OF_CORES] [--host HOST] [--port PORT]
-                      [fastq_files [fastq_files ...]]
-assignment2.py: error: argument fastq_files: can't open '100': [Errno 2] No such file or directory: '100'
+Traceback (most recent call last):
+  File "assignment2.py", line 350, in <module>
+    sys.exit(main())
+  File "assignment2.py", line 329, in main
+    bytes_per_chunk = math.ceil(total_bytes / args.num_of_chunks)
+AttributeError: 'Namespace' object has no attribute 'num_of_chunks'
 client errors: 
-***ASSIGNMENT assignment2.py STATUS: FAILED at  do 14 jul 2022 11:50:00 CEST
+***ASSIGNMENT assignment2.py STATUS: FAILED at  do 14 jul 2022 11:51:17 CEST
