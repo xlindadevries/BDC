@@ -1,27 +1,25 @@
-#!/usr/local/bin/python3.7
+#!/usr/local/bin/python3
 
 __author__ = "Linda de Vries"
 __version__ = "1.0"
 
+import argparse
+import math
 import multiprocessing as mp
-from multiprocessing.managers import BaseManager
-import csv
 import os
 import queue
-import sys
 import time
-import math
-import argparse as ap
+import sys
+from multiprocessing.managers import BaseManager
 
 POISONPILL = "MEMENTOMORI"
 ERROR = "DOH"
 AUTHKEY = b'whathasitgotinitspocketsesss?'
 
 
-def make_server_manager(ip, port):
-    """
-    Create a manager for the server, listening on the given port.
-    Return a manager object with get_job_q and get_result_q methods.
+def make_server_manager(port, authkey):
+    """ Create a manager for the server, listening on the given port.
+        Return a manager object with get_job_q and get_result_q methods.
     """
     job_q = queue.Queue()
     result_q = queue.Queue()
@@ -35,76 +33,78 @@ def make_server_manager(ip, port):
     QueueManager.register('get_job_q', callable=lambda: job_q)
     QueueManager.register('get_result_q', callable=lambda: result_q)
 
-    manager = QueueManager(address=(ip, port), authkey=AUTHKEY)
+    manager = QueueManager(address=('', port), authkey=authkey)
     manager.start()
     print('Server started at port %s' % port)
     return manager
 
 
-def runserver(fn, data, ip, port, outfile):
+def runserver(fn, data, IP, PORTNUM):
     # Start a shared manager server and access its queues
-    manager = make_server_manager(ip, port)
+    manager = make_server_manager(PORTNUM, b'whathasitgotinitspocketsesss?')
     shared_job_q = manager.get_job_q()
     shared_result_q = manager.get_result_q()
 
-    if not data[0]:
+    if not data:
         print("Gimme something to do here!")
         return
 
-    file = data[0]
+    files = data[0]
     chunks = data[1]
+    output_file = data[2]
 
     # When there is data available, jobs are creating with a filename and their chunk of that file
     print("Sending the data...")
-    for i in range(len(chunks)):
-        if not i + 1 == len(chunks):
-            shared_job_q.put({'fn': fn, 'arg': (file, chunks[i], chunks[i + 1])})
 
-    time.sleep(2)
+    for file in files:
+        # get chunks per byte
+        total_bytes = os.stat(file).st_size
+        bytes_per_chunk = math.ceil(total_bytes / chunks)
+        iterable = [x * bytes_per_chunk for x in range(chunks + 1)]
 
-    # After putting all the data in the Queue, the POISONPILL is added
+        file_chunks = [[iterable[x], iterable[x+1]] for x in range(len(iterable)-1)]
+        queue_buckets = [[file, x] for x in file_chunks]
+
+        for bucket in queue_buckets:
+            shared_job_q.put({'fn': fn, 'arg': bucket})
+
+        time.sleep(2)
+
+        # Collecting the results
+        results = []
+        while True:
+            try:
+                result = shared_result_q.get_nowait()
+                results.append(result)
+                print(f"Got result {result} from result queue!")
+                # If all chunks have been processed, exit the loop
+                if len(results) == len(queue_buckets):
+                    print("All chunks have been processed and added to the results")
+                    break
+            except queue.Empty:
+                time.sleep(1)
+                continue
+
+
+        combined = combine_dicts([x['result'] for x in results])
+        average = total_to_average(combined)
+        write_to_csv(average, output_file, file)
+
+    # Tell the client process no more data will be forthcoming
     shared_job_q.put(POISONPILL)
-
-    # Sleeping for 2 seconds
-    time.sleep(2)
-
-    # Collecting the results
-    results = []
-    while True:
-        # Trying to get the results from the results queue
-        try:
-            result = shared_result_q.get_nowait()
-            results.append(result)
-            print(f"Got result {result} from result queue!")
-
-            # If all chunks have been processed, exit the loop
-            if len(results) == len(chunks) - 1:
-                print("All chunks have been processed and added to the results")
-                break
-
-        # If no results are found in the queue, wait a moment before trying again
-        except queue.Empty:
-            time.sleep(1)
-            continue
-
-    # Sleep for a moment to give the clients time to die
+    # Sleep a bit before shutting down the server - to give clients time to
+    # realize the job queue is empty and exit in an orderly way.
+    time.sleep(5)
     print("Server is finished")
     manager.shutdown()
 
-    # Write the results to output
-    avg_phreds = process_mp_outputs(results)
-    print(results)
-    write_csv(outfile, avg_phreds)
-
 
 def make_client_manager(ip, port, authkey):
+    """ Create a manager for a client. This manager connects to a server on the
+        given address and exposes the get_job_q and get_result_q methods for
+        accessing the shared queues from the server.
+        Return a manager object.
     """
-    Create a manager for a client. This manager connects to a server on the
-    given address and exposes the get_job_q and get_result_q methods for
-    accessing the shared queues from the server.
-    Return a manager object.
-    """
-
     class ServerQueueManager(BaseManager):
         pass
 
@@ -115,19 +115,19 @@ def make_client_manager(ip, port, authkey):
     manager.connect()
 
     print('Client connected to %s:%s' % (ip, port))
+
     return manager
 
 
 # Client runner
-def runclient(num_processes, ip, port):
+def runclient(num_processes, IP, PORTNUM):
     """
     Starting a local client manager.
     """
-    manager = make_client_manager(ip, port, AUTHKEY)
+    manager = make_client_manager(IP, PORTNUM, AUTHKEY)
     job_q = manager.get_job_q()
     result_q = manager.get_result_q()
     run_workers(job_q, result_q, num_processes)
-
 
 # The client worker
 def run_workers(job_q, result_q, num_processes):
@@ -150,10 +150,8 @@ def peon(job_q, result_q):
     """
     Worker function executing a job and appending it to the result queue
     """
-    # Stores the name of job
     my_name = mp.current_process().name
-
-    # The job loop
+    # the job loop
     while True:
         # If the poisonpill comes, all tasks are finished and the worker is exterminated
         try:
@@ -165,7 +163,7 @@ def peon(job_q, result_q):
             # Else execute the job and append to result queue
             else:
                 try:
-                    result = job['fn'](*job['arg'])
+                    result = job['fn'](job['arg'])
                     print(f"Worker {my_name} busy with {job['arg']}!")
                     result_q.put({'job': job, 'result': result})
                     print("Peon %s Workwork on %s!" % (my_name, job['arg']))
@@ -173,83 +171,82 @@ def peon(job_q, result_q):
                 except NameError:
                     print("Worker cannot be found...")
                     result_q.put({'job': job, 'result': ERROR})
-        # If there are no jobs, but also no death, just take some rest
+
         except queue.Empty:
             print(f"SLeeptime for: {my_name}")
             time.sleep(1)
 
 
-def get_avg_phreds(fastq, start_byte, end_byte):
-    """
-    Opens the file, and gets the average phred score
-    """
-    # Finding the first complete header and setting that as new start
-    with open(fastq[0], "r") as fastq_file:
-        # If the start byte is not 0, find the nearest upcoming header
-        fastq_file.seek(start_byte)
-        if not start_byte == 0:
-            start_bytes = []
-            for line in fastq_file:
-                start_bytes.append(fastq_file.tell())
-                if line.decode("utf-8").startswith("@DE18PCC"):
-                    break
-            fastq_file.seek(start_bytes[-2])
-        # Loop over all the lines to find the quality strings
-        phreds_dict = {}
-        for count, line in enumerate(fastq_file, start=1):
-            if line.decode("utf-8").startswith("@DE18PCC"):
-                if fastq_file.tell() > end_byte:
-                    break
-            # When the quality string has been found, process it
-            if count % 4 == 0:
-                qualities = list(line)[:-1]
-                for base_nr, quality in enumerate(qualities, start=1):
-                    if base_nr not in phreds_dict:
-                        phreds_dict[base_nr] = [quality]
-                    else:
-                        phreds_dict[base_nr].append(quality)
-
-    # Returning the avg phred for position as lists in a list
-    return [[key, round(sum(phreds_dict[key]) / len(phreds_dict[key]))] for key in phreds_dict]
-
-
-def process_mp_outputs(results):
-    """
-    Parsing the different output lists, and collecting the different averages in a dict
-    """
-    avg_phreds = {}
-    # Iterating over each result
-    for result in results:
-        result = result['result']
-        # Appending the average for that base to the correct list in the dict
-        for phred in result:
-            if phred[0] not in avg_phreds:
-                avg_phreds[phred[0]] = [phred[1]]
+def combine_dicts(dict_list):
+    total_dict = {}
+    for sub_dict in dict_list:
+        for key in sub_dict:
+            if key in total_dict:
+                total_dict[key][0] += sub_dict[key][0]
+                total_dict[key][1] += sub_dict[key][1]
             else:
-                avg_phreds[phred[0]].append(phred[1])
-
-    # Returning the average phred score per base position for ALL qualities this time
-    return [[key, (sum(avg_phreds[key]) / len(avg_phreds[key])) - 33] for key in avg_phreds]
+                total_dict[key] = sub_dict[key]
+    return total_dict
 
 
-def write_csv(outfile, avg_phreds):
-    """
-    Writes the base number and average phred score for tht position to the csv
-    """
-    if outfile:
-        with open(outfile, "w") as out:
-            for pos, score in enumerate(outfile):
-                out.write(f"{pos}, {score}\n")
+def write_to_csv(output, output_file, input_file):
+    if output_file:
+        input_file = input_file.split("/")[-1]
+        name = input_file + "." + output_file
+        file_obj = open(name, "w")
+        for pos, score in enumerate(output):
+            file_obj.write(f"{pos},{score}\n")
+        file_obj.close()
     else:
-        for pos, score in enumerate(avg_phreds):
+        sys.stdout.write(f"{input_file}\n")
+        for pos, score in enumerate(output):
             sys.stdout.write(f"{pos},{score}\n")
 
 
-def main():
+def total_to_average(base_dict, digits=3):
+    avg_bases = []
+    for key in base_dict.keys():
+        avg_bases.append(round(base_dict[key][1]/base_dict[key][0]-33, digits))
+    return avg_bases
+
+
+def read_file(bucket):
+    file = bucket[0]
+    reading_frame = bucket[1]
+    file_obj = open(file)
+    file_obj.seek(reading_frame[0])
+
+    line = file_obj.readline()
+
+    while line != "+\n" and file_obj.tell() < reading_frame[1]:
+        line = file_obj.readline()
+
+    count = 3
+    base_dict = {}
+    while file_obj.tell() < reading_frame[1] and line:
+        line = file_obj.readline()
+        count += 1
+        if count % 4 == 0:
+            # in score line
+            line = line.strip()
+            for pos, c in enumerate(line):
+                if pos in base_dict:
+                    base_dict[pos][0] += 1
+                    base_dict[pos][1] += ord(c)
+                else:
+                    base_dict[pos] = [1, ord(c)]
+    file_obj.close()
+    return base_dict
+
+
+def argument_parser():
+    """
+    Argument parser for command line arguments.
+    """
     # command line parameters
-    argparser = ap.ArgumentParser(
+    parser = argparse.ArgumentParser(
         description="Script voor Opdracht 2 van Big Data Computing;  Calculate PHRED scores over the network.")
-    mode = argparser.add_mutually_exclusive_group(required=True)
+    mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument(
         "-s",
         "--server",
@@ -260,91 +257,97 @@ def main():
         "--client",
         action="store_true",
         help="Run the program in Client mode; see extra options needed below")
-
     # Server sided arguments
-    server_args = argparser.add_argument_group(title="Arguments when run in server mode")
+    server_args = parser.add_argument_group(title="Arguments when run in server mode")
     server_args.add_argument(
         "-o",
         action="store",
         dest="csvfile",
-        type=ap.FileType('w', encoding='UTF-8'),
+        type=argparse.FileType('w', encoding='UTF-8'),
         required=False,
         help="CSV file om de output in op te slaan. Default is output naar terminal STDOUT")
     server_args.add_argument(
         "fastq_files",
         action="store",
-        type=ap.FileType('r'),
+        type=argparse.FileType('r'),
         nargs='*',
-        help="Minstens 1 Illumina Fastq Format file om te verwerken")
+        help="fastq file name, always first argument")
     server_args.add_argument(
-        "-chunks",
-        "--num_of_chunks",
+        '--chunks',
         action="store",
         type=int,
-        required=True)
+        required=False,
+        help='Amount of chunks the data nees to be split into')
 
     # Client sided arguments
-    client_args = argparser.add_argument_group(title="Arguments when run in client mode")
+    client_args = parser.add_argument_group(title="Arguments when run in client mode")
     client_args.add_argument(
-        "-n",
-        "--num_of_cores",
-        action="store",
-        required=False,
+        '-n',
+        '--number_of_cores',
         type=int,
-        help="amount of cores for using per host.")
+        metavar='',
+        required=False,
+        help='Amount of cores the clients are allowed to use.')
     client_args.add_argument(
         "--host",
         action="store",
         type=str,
+        default='',
         help="The hostname where the Server is listening")
     client_args.add_argument(
         "--port",
         action="store",
         type=int,
+        default=5381,
         help="The port on which the Server is listening")
 
-    # Store all the arguments
-    args = argparser.parse_args()
+    args = parser.parse_args()
+    main(args)
 
-    # Make the server, client and other variables
+
+def main(args):
     server = args.server
     client = args.client
 
-    # Get the filename
+    # get filename argument
     if args.fastq_files:
         files = []
         for file in args.fastq_files:
+            print(file)
             files.append(file.name)
-        filename = files[0]
+        file = files[0]
 
-    # Get the output
-    outfile = args.csvfile
+    # get output file argument
+    if args.csvfile:
+        output_file = args.csvfile.name
+    else:
+        output_file = None
 
-    # Starting the server when -s is given in the command line
+    # get the chunks argument
+    chunks = args.chunks
+
+    # get the cores argument
+    cores = args.number_of_cores
+
     if server:
-        ip = ""
+        print("started server")
+        IP = args.host
         port = args.port
-        # Calculating the start and stop values
-        total_bytes = os.path.getsize(filename)
-        bytes_per_chunk = math.ceil(total_bytes / args.num_of_chunks)
 
-        chunks = [i for i in range(0, total_bytes, bytes_per_chunk)]
-        chunks.append(total_bytes)
+        data = [files, chunks, output_file]
+        server = mp.Process(target=runserver, args=(read_file, data, IP, port))
 
-        # Store file name and bites in a variable
-        data = [filename, chunks]
-        server = mp.Process(target=runserver, args=(get_avg_phreds, data, ip, port, outfile))
         server.start()
         time.sleep(1)
 
-    # Starting the client when -c is given in the command line
     if client:
+        print("Started client")
+        IP = args.host
         port = args.port
-        ip = args.host
-        client = mp.Process(target=runclient, args=(args.num_of_cores, ip, port,))
+        client = mp.Process(target=runclient, args=(cores, IP, port,))
         client.start()
         client.join()
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(argument_parser())
