@@ -1,2 +1,2 @@
-Report for Assignment 2 start evaluation at do 14 jul 2022 13:53:56 CEST with options -s --chunks 100 --host localhost --port 25717 /homes/martijntest/courses/BDC/2022/grading.fastq
-***ASSIGNMENT {assignment} STATUS: PASSED at  do 14 jul 2022 13:54:00 CEST
+Report for Assignment 2 start evaluation at vr 15 jul 2022 13:25:35 CEST with options -s --chunks 100 --host localhost --port 25717 /homes/martijntest/courses/BDC/2022/grading.fastq
+***ASSIGNMENT {assignment} STATUS: PASSED at  vr 15 jul 2022 13:25:45 CEST
